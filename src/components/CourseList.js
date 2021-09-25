@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useUserState, signInWithGoogle, signOut } from '../utilities/firebase.js';
 import { terms, getCourseTerm } from '../utilities/times.js';
 import Course from './Course';
 
@@ -11,13 +12,27 @@ const TermButton = ({ term, setTerm, checked }) => (
   </>
 );
 
-const TermSelector = ({ term, setTerm }) => (
-  <div className="btn-group">
-    {
-      Object.values(terms).map(value => <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />)
-    }
-  </div>
+const SignInButton = () => (
+  <button className="btn btn-secondary btn-sm p-2 m-1" onClick={() => signInWithGoogle()}>Sign In</button>
+)
+
+const SignOutButton = () => (
+  <button className="btn btn-secondary btn-sm p-1 m-1" onClick={() => signOut()}>Sign Out</button>
 );
+
+const TermSelector = ({ term, setTerm }) => {
+  const [user] = useUserState();
+  return (
+    <div className="btn-toolbar justify-content-between">
+      <div className="btn-group">
+        {
+          Object.values(terms).map(value => <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />)
+        }
+      </div>
+      { user ? <SignOutButton /> : <SignInButton /> }
+    </div>
+  );
+};
 
 const CourseList = ({ courses }) => {
   const [term, setTerm] = useState('Fall');
