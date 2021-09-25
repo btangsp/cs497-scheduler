@@ -1,10 +1,12 @@
+const meetsPat = /^ *((?:M|Tu|W|Th|F)+) +(\d\d?):(\d\d) *[ -] *(\d\d?):(\d\d) *$/;
+
+const days = ['M', 'Tu', 'W', 'Th', 'F'];
+
 export const terms = { F: 'Fall', W: 'Winter', S: 'Spring'};
 
 export const getCourseTerm = course => (
   terms[course.id.charAt(0)]
 );
-
-const days = ['M', 'Tu', 'W', 'Th', 'F'];
 
 const daysOverlap = (days1, days2) => (
   days.some(day => days1.includes(day) && days2.includes(day))
@@ -26,9 +28,7 @@ export const hasConflict = (course, selected) => (
   selected.some(selection => courseConflict(course, selection))
 );
 
-const meetsPat = /^ *((?:M|Tu|W|Th|F)+) +(\d\d?):(\d\d) *[ -] *(\d\d?):(\d\d) *$/;
-
-const timeParts = meets => {
+export const timeParts = meets => {
   const [match, days, hh1, mm1, hh2, mm2] = meetsPat.exec(meets) || [];
   return !match ? {} : {
     days,
